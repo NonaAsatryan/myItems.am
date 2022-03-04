@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/userRegister")
-public class RegistrationServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/register")
+public class RegisterServlet extends HttpServlet {
 
     private UserManager userManager=new UserManager();
 
@@ -26,14 +26,17 @@ public class RegistrationServlet extends HttpServlet {
         String surname = req.getParameter("surname");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-
-        User user = User.builder()
-                .name(name)
-                .surname(surname)
-                .email(email)
-                .password(password)
-                .build();
-        userManager.add(user);
-        resp.sendRedirect("/userRegister");
+        String phone = req.getParameter("phone");
+        if (userManager.getByEmail(email) == null) {
+            User user = User.builder()
+                    .name(name)
+                    .surname(surname)
+                    .email(email)
+                    .password(password)
+                    .phone(phone)
+                    .build();
+            userManager.add(user);
+        }
+        resp.sendRedirect("/home");
     }
 }

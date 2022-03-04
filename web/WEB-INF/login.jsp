@@ -11,7 +11,7 @@
     <title>Login</title>
 </head>
 <body>
-<a href="/logout">Logout</a><br>
+<a href="/home">Back</a><br>
 <form action="/login" method="post">
     <input type="email" name="email" placeholder="email"><br>
     <input type="password" name="password" placeholder="password"><br>

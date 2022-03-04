@@ -12,20 +12,36 @@ public class UserManager {
     private Connection connection = DBConnectionProvider.getInstance().getConnection();
 
     public void add(User user) {
-        String sql = "insert into user(name,surname,email,password) VALUES(?,?,?,?)";
+        String sql = "insert into user(name,surname,email,password, phone) VALUES(?,?,?,?,?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getName());
             statement.setString(2, user.getSurname());
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getPassword());
+            statement.setString(5, user.getPhone());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 user.setId(id);
             }
-            System.out.println("User was added successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void edit (User user) {
+        String sql = "UPDATE user SET name = ?, surname = ?, email = ?, password = ?, user_type = ? WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getSurname());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getPassword());
+            statement.setString(5, user.getPhone());
+            statement.setInt(6, user.getId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -38,30 +54,7 @@ public class UserManager {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-
                 return getUserFromResultSet(resultSet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public User getByEmailAndPassword(String email, String password) {
-        String sql = "SELECT * FROM user WHERE `email` = ? AND password = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, email);
-            statement.setString(2, password);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setName(resultSet.getString(2));
-                user.setSurname(resultSet.getString(3));
-                user.setEmail(resultSet.getString(4));
-                user.setPassword(resultSet.getString(5));
-                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,13 +69,7 @@ public class UserManager {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setName(resultSet.getString(2));
-                user.setSurname(resultSet.getString(3));
-                user.setEmail(resultSet.getString(4));
-                user.setPassword(resultSet.getString(5));
-                users.add(user);
+                users.add(getUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,9 +94,8 @@ public class UserManager {
     public void deleteUserById(int id) {
         String sql = "delete FROM user WHERE id=" + id;
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            statement.executeUpdate();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -123,11 +109,11 @@ public class UserManager {
                     .surname(resultSet.getString(3))
                     .email(resultSet.getString(4))
                     .password(resultSet.getString(5))
+                    .phone(resultSet.getString(6))
                     .build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
-
 }

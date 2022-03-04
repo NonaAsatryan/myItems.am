@@ -9,9 +9,9 @@ import java.util.List;
 
 public class CategoryManager {
 
-    private static Connection connection = DBConnectionProvider.getInstance().getConnection();
+    private Connection connection = DBConnectionProvider.getInstance().getConnection();
 
-    public static void add(Category category) {
+    public void add(Category category) {
         String sql = "insert into category(name) VALUES(?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -22,7 +22,6 @@ public class CategoryManager {
                 int id = resultSet.getInt(1);
                 category.setId(id);
             }
-            System.out.println("User was added successfully");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,10 +48,7 @@ public class CategoryManager {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                Category category = new Category();
-                category.setId(resultSet.getInt(1));
-                category.setName(resultSet.getString(2));
-                categories.add(category);
+                categories.add(getCategoryFromResultSet(resultSet));
             }
         } catch (SQLException  e) {
             e.printStackTrace();

@@ -11,13 +11,14 @@
     <title>Register</title>
 </head>
 <body>
-User register <br>
-<form action="/userRegister" method="post" >
+<a href="/home">Back</a>
+<form action="/register" method="post" >
     <input type="text" name="name" placeholder="name"/><br>
     <input type="text" name="surname" placeholder="surname"/><br>
     <input type="email" name="email" placeholder="email"/><br>
     <input type="password" name="password" placeholder="password"/><br>
-    <input type="submit" value="Register">
+    <input type="text" name="phone" placeholder="phone"/><br>
+    <input type="submit" value="register">
 </form>
 </body>
 </html>

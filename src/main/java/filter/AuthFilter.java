@@ -1,16 +1,13 @@
 package filter;
 
-import model.User;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/userHome","/logout"})
-public class ManagerAuthFilter implements Filter {
+@WebFilter(urlPatterns = {"/addItem","/myItems"})
+public class AuthFilter implements Filter {
 
 @Override
 public void init(FilterConfig filterConfig) throws ServletException {
@@ -20,11 +17,10 @@ public void init(FilterConfig filterConfig) throws ServletException {
 @Override
 public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, IOException {
     HttpServletRequest request = (HttpServletRequest) servletRequest;
-    HttpSession session = request.getSession();
-    User user = (User) session.getAttribute("user");
+    HttpServletResponse response = (HttpServletResponse) servletResponse;
+    Object user = request.getSession().getAttribute("user");
     if (user == null) {
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.sendRedirect("/home.jsp");
+        response.sendRedirect("/home");
     } else {
         filterChain.doFilter(servletRequest, servletResponse);
     }

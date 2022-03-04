@@ -11,8 +11,8 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, IOException {
         req.getSession().invalidate();
-        resp.sendRedirect("/WEB-INF/home.jsp");
+        resp.sendRedirect("/home");
     }
 }

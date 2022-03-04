@@ -31,7 +31,7 @@ public class DBConnectionProvider {
     public Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                 connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
             }
         } catch (SQLException e) {
             e.printStackTrace();
